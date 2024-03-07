@@ -5,20 +5,14 @@
 #                                   ######################                                   #
 
 #
-# Example color:
+# Example (and default) color:
+# <!> Do not delete <!>
 #
-# myColor:
-#   genericName: 'MyColor'
-#   permission: "namecolor.mycolor"
-#   item: DIAMOND
-#   colors:
-#     - '&a'
-#     - '&l&b'
-#     - '&d'
 
-default:
-  genericName: 'Default'
-  permission: "namecolor.default"
-  item: LIGHT_GRAY_DYE
-  colors:
+default:                          # the color's identifier
+  genericName: 'Default'          # The colors generic name (can be used in gui.yml)
+  permission: "namecolor.default" # The permission needed to select this color
+  item: LIGHT_GRAY_DYE            # the item displayed in the gui
+  obtained: 'Obtained by default' # The text displayed in the {obtained} placeholder
+  colors:                         # A list of color codes to use (you can use any combination imaginable)
     - '&7'

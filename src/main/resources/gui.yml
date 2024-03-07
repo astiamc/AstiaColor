@@ -1,0 +1,95 @@
+#                                   ######################                                   #
+#                                   #                    #                                   #
+#####################################   AstiaMC Config   #####################################
+#                                   #                    #                                   #
+#                                   ######################                                   #
+
+#
+# How to: ~~ Use this config ~~
+#
+
+# Internal placeholders (When used in colors-lore of colors-gui):
+# ~~string~~            - Make a String colored using the color template from colors.yml
+# {generic_name}        - Gets the genericName text from colors.yml
+# {color_array}         - Previews the colors (you'll have to try that one out to see)
+# {obtained}            - Gets the text put into the obtained key in colors.yml
+
+# PlaceholderAPI is supported (%player_name%) a.e.
+
+
+# Default inventory that gets opened when you execute /color
+default:
+  slots: 9 # Has to be a number divisible by 9 (9, 18, 27 ... 54)
+  title: '&5&lColor GUI'
+  items:
+    color-gui:
+      material: CHEST
+      slot: 4
+      name: "&d&lView colors"
+      lore:
+        - "&7Cut yourself some slack with a custom §nname color!"
+        - ""
+        - "&5Information:"
+        - " &5&l* &7Color type: &5Name"
+        - " &5&l* &7Color selected: %ac_coloredcolor%"
+        - ""
+        - "&5%l<!> &dClick to view all name colors!"
+      onclick: # Remove this structure entirely if you wish to have no onclick
+        type: OPEN_INV
+        value: colors-gui
+        close: true # True by default if type == OPEN_INV
+
+# A GUI with 'colors: true' is being treated differently to a normal gui. It has no 'slots' key.
+# This gui increases its size automatically as you add name colors into colors.yml
+# For this reason max name color amount is 45 if 'enable-items' is true
+colors-gui:
+  colors: true
+  title: '&d&lSelect a name color'
+  enable-items: false
+  items: # you can customise the bottom row
+    store:
+      material: CHEST
+      slot: 2
+      name: "&d&l• STORE •"
+      lore:
+        - "&7No name colors? No problem!"
+        - ""
+        - "&5%lVisit store.astiamc.com"
+        - " &5&l* &7Buy ranks..."
+        - " &5&l* &7...cosmetics..."
+        - " &5&l* &7...and more!"
+        - " "
+        - "&5%l<!> &dClick to visit our shop!"
+      onclick:
+        type: COMMAND
+        value: /buy
+        close: true
+
+  # Keys exclusive to the colors-gui.
+  colors-display: '&f&lName Color: ~~%essentials_nickname%~~'
+  colors-lore:
+    locked:
+      - "&c&lLocked"
+      - " "
+      - "&5Color information:"
+      - " &5&l* &7Color: ~~{generic_name}~~ {color_array}"
+      - " &5&l* &7{obtained}"
+      - " "
+      - "&4&l<!> &cYou &ndo not&c own this name color!"
+
+    owned:
+      - "&a&lOwned"
+      - " "
+      - "&5Color information:"
+      - " &5&l* &7Color: ~~{generic_name}~~ {color_array}"
+      - " &5&l* &7{obtained}"
+      - " "
+      - "&2&l<!> &aYou &nown&a this name color!"
+      - "&b&nClick to select this name color!"
+  colors-messages:
+    locked:
+      - "&cYou don't own the ~~{generic_name}&c name color! Head over to &nstore.astiamc.com&c to buy it!"
+    equipped:
+      - " "
+      - "&aSuccessfully equipped the ~~{generic_name}~~&a name color!"
+      - " "

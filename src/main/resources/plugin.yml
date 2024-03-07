@@ -6,4 +6,11 @@ load: STARTUP
 depend: [PlaceholderAPI]
 authors: [Strokkur24]
 description: Name color plugin for AstiaMC
-website: astiamc.com
+website: store.astiamc.com
+commands:
+  color:
+    aliases:
+      - colour
+      - cc
+      - namecolor
+    description: Open the color GUI

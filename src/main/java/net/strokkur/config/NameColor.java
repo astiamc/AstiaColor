@@ -37,6 +37,21 @@ public class NameColor {
         return out.toString();
     }
 
+    public String getColorArray() {
+        StringBuilder out = new StringBuilder("&8[");
+        for (int i = 0; i < colorcodes.size(); i++) {
+            out.append(colorcodes.get(i)).append(colorcodes.get(i).replaceAll("[§&]", ".._;_.."));
+            if (i < colorcodes.size() - 2) {
+                out.append("&7, ");
+            }
+            else {
+                out.append("&7 and ");
+            }
+        }
+
+        return out.append("&8]").toString();
+    }
+
     public String getName() {
         return name;
     }

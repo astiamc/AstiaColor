@@ -16,14 +16,17 @@ public class ColorConfig {
     public static NameColor getColor(String color) {
         return new NameColor(color, Objects.requireNonNull(cfg.getStringList(color + ".colors")));
     }
-    public static String genericName(String color) {
+    public static String getGenericName(String color) {
         return Objects.requireNonNull(cfg.getString(color + ".genericName"));
     }
     public static String getPermission(String color) {
         return Objects.requireNonNull(cfg.getString(color + ".permission"));
     }
     public static Material getMaterial(String color) {
-        return Material.getMaterial(color.toUpperCase());
+        return Material.getMaterial(cfg.getString(color + ".item").toUpperCase());
+    }
+    public static String getObtained(String color) {
+        return Objects.requireNonNull(cfg.getString(color + ".obtained"));
     }
 
 
@@ -41,15 +44,15 @@ public class ColorConfig {
     private static File file;
 
 
-    public ColorConfig(String fileName) {
-        file = new File(Main.plugin.getDataFolder() + "\\" + fileName);
+    public static void init() {
+        file = new File(Main.plugin.getDataFolder() + "\\colors.yml");
 
         if (Main.plugin.getDataFolder().exists()) {
             Main.plugin.getDataFolder().mkdir();
         }
 
         try {
-            Files.copy(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("colors.yml")),
+            Files.copy(Objects.requireNonNull(Main.plugin.getResource("colors.yml")),
                     file.toPath());
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,14 +63,5 @@ public class ColorConfig {
 
     public static void reload() {
         cfg = YamlConfiguration.loadConfiguration(file);
-    }
-
-    public static void save() {
-        try {
-            cfg.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-            ;
-        }
     }
 }

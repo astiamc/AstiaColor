@@ -9,7 +9,7 @@ import java.util.UUID;
 public class Database {
 
     private static Connection connection;
-    private static final String path = Main.plugin.getDataFolder().getPath() + "/playercolors.db";
+    private static final String path = Main.plugin.getDataFolder().getPath() + "/playernamecolors.db";
     private static String connectionString = "jdbc:sqlite:" + path;
 
     static {
