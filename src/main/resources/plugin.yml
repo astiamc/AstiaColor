@@ -1,0 +1,9 @@
+name: AstiaColor
+version: '${version}'
+main: net.strokkur.Main
+prefix: Color
+load: STARTUP
+depend: [PlaceholderAPI]
+authors: [Strokkur24]
+description: Name color plugin for AstiaMC
+website: astiamc.com
