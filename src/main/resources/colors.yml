@@ -1,0 +1,24 @@
+#                                   ######################                                   #
+#                                   #                    #                                   #
+#####################################   AstiaMC Config   #####################################
+#                                   #                    #                                   #
+#                                   ######################                                   #
+
+#
+# Example color:
+#
+# myColor:
+#   genericName: 'MyColor'
+#   permission: "namecolor.mycolor"
+#   item: DIAMOND
+#   colors:
+#     - '&a'
+#     - '&l&b'
+#     - '&d'
+
+default:
+  genericName: 'Default'
+  permission: "namecolor.default"
+  item: LIGHT_GRAY_DYE
+  colors:
+    - '&7'
