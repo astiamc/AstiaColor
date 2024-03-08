@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * Class for holding the information needed to convert a string to a colored String <br>
- * > Use {@link ColorConfig#getColor(String)} to get the color <br>
+ * > Use {@link NameColorConfig#getColor(String)} to get the color <br>
  * > Use {@link #colorString(String)} to apply a color
  */
 public class NameColor {
@@ -15,13 +15,17 @@ public class NameColor {
     protected NameColor(String name, List<String> colorcodes) {
         this.name = name;
         this.colorcodes = colorcodes;
+
+        if (colorcodes == null || colorcodes.isEmpty()) {
+            throw new RuntimeException("For some reason the colorcodes for " + name + " are empty / null. What the actual fuck.");
+        }
     }
 
     /**
      * Use this method to apply a color format to a String
      * @param str The String to apply the color format to
      * @return A formatted String
-     *
+     * <p>
      * Example:<br>
      * - Colors: <code>[&a, &b]</code><br>
      * - Original String: <code>Hello</code><br>
@@ -33,6 +37,10 @@ public class NameColor {
 
         for (int i = str.length() - 1; i >= 0; i--) {
             String currentColor = colorcodes.get(n % colorcodes.size());
+            if (currentColor.length() % 2 == 1) {
+                currentColor = currentColor.substring(0, 2);
+            }
+
             out.insert(0, currentColor + str.charAt(i));
             n--;
         }
@@ -56,7 +64,7 @@ public class NameColor {
                 out.append("&7, ");
             }
             else {
-                out.append("&7 and ");
+                out.append("&7 & ");
             }
         }
 

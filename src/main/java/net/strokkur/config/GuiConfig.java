@@ -2,16 +2,17 @@ package net.strokkur.config;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.strokkur.Main;
-import net.strokkur.color.Database;
+import net.strokkur.gui.ChatColorGUI;
+import net.strokkur.gui.NameColorGUI;
 import net.strokkur.util.GetNickname;
 import net.strokkur.util.Pair;
 import net.strokkur.util.fastinv.FastInv;
 import net.strokkur.util.fastinv.ItemBuilder;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -25,71 +26,12 @@ public class GuiConfig {
 
     public static @NotNull FastInv getInventory(String name, Player p) {
 
-        if (cfg.get(name + ".colors") != null && cfg.getBoolean(name + ".colors")) {
+        if (cfg.get(name + ".namecolor") != null && cfg.getBoolean(name + ".namecolor")) {
+            return NameColorGUI.get(p, name);
+        }
 
-            int colorAmount = ColorConfig.getAllColors().size();
-            colorAmount += cfg.getBoolean(name + ".enable-items") ? 9 : 0;
-
-            if (colorAmount > 54) {
-                p.sendMessage("§cThere seems to be a problem with the color gui. Please contact Strokkur24 (@strokkur24 on discord) " +
-                        "and send him the following message: 'CONFIG-ERROR: 207 --- Expected a number less or equal than 54, found " + colorAmount + "'");
-            }
-
-            FastInv inv = new FastInv(getColumns(colorAmount) * 9, getReplaced(name + ".title", p));
-
-            if (cfg.getBoolean(name + ".enable-items")) {
-                for (Object k : cfg.getKeys(true).stream().filter((str) -> str.contains(name + ".items.") && str.split("\\.").length == 3).toArray()) {
-                    String key = (String) k;
-
-                    if (cfg.getInt(key + "slot") > 9) {
-                        continue;
-                    }
-
-                    Pair<ItemBuilder, Consumer<InventoryClickEvent>> item = getItem(key, p);
-                    inv.setItem(cfg.getInt(key + ".slot") + inv.getInventory().getSize() - 10, item.getKey().build(), item.getValue());
-                }
-            }
-
-            int slot = 0;
-            for (String c : ColorConfig.getAllColors()) {
-
-                ItemBuilder builder = new ItemBuilder(ColorConfig.getMaterial(c));
-                builder.name(getReplaced(name + ".colors-display", p, c));
-
-                Consumer<InventoryClickEvent> clickEvent = (e) -> {
-                    e.setCancelled(true);
-
-                    for (String str : cfg.getStringList(name + ".colors-messages.locked")) {
-                        p.sendMessage(replace(str, p, c));
-                    }
-                };
-
-                if (p.hasPermission(ColorConfig.getPermission(c))) {
-                    for (String str : cfg.getStringList(name + ".colors-lore.owned")) {
-                        str = replace(str, p, c);
-                        builder.addLore(str);
-                    }
-                    clickEvent = (e) -> {
-                        e.setCancelled(true);
-                        Database.setColor(p.getUniqueId(), c);
-
-                        for (String str : cfg.getStringList(name + ".colors-messages.equipped")) {
-                            p.sendMessage(replace(str, p, c));
-                        }
-                    };
-                }
-                else {
-                    for (String str : cfg.getStringList(name + ".colors-lore.locked")) {
-                        str = replace(str, p, c);
-                        builder.addLore(str);
-                    }
-                }
-
-                inv.setItem(slot, builder.build(), clickEvent);
-                slot++;
-            }
-
-            return inv;
+        if (cfg.get(name + ".chatcolor") != null && cfg.getBoolean(name + ".chatcolor")) {
+            return ChatColorGUI.get(p, name);
         }
 
         FastInv inv = new FastInv(cfg.getInt(name + ".slots"), getReplaced(name + ".title", p));
@@ -105,9 +47,6 @@ public class GuiConfig {
     }
 
 
-
-
-
     /*
      * - - - - - - - - - - - - - - - -
      *
@@ -118,7 +57,7 @@ public class GuiConfig {
      */
 
 
-    private static YamlConfiguration cfg;
+    public static YamlConfiguration cfg;
     private static File file;
 
     private static final File folder = new File("plugins/AstiaColor");
@@ -181,13 +120,13 @@ public class GuiConfig {
             raw = PlaceholderAPI.setPlaceholders(p, raw);
         }
 
-        raw = raw.replaceAll("\\{generic_name}", ColorConfig.getGenericName(color));
-        raw = raw.replaceAll("\\{color_array}", ColorConfig.getColor(color).getColorArray());
-        raw = raw.replaceAll("\\{obtained}", ColorConfig.getObtained(color));
+        raw = raw.replaceAll("\\{generic_name}", NameColorConfig.getGenericName(color));
+        raw = raw.replaceAll("\\{color_array}", NameColorConfig.getColor(color).getColorArray());
+        raw = raw.replaceAll("\\{obtained}", NameColorConfig.getObtained(color));
 
         Matcher colorifyMatcher = colorify.matcher(raw);
         while (colorifyMatcher.find()) {
-            raw = colorifyMatcher.replaceFirst(ColorConfig.getColor(color).colorString(raw.substring(colorifyMatcher.start() + 2, colorifyMatcher.end() - 2)));
+            raw = colorifyMatcher.replaceFirst(NameColorConfig.getColor(color).colorString(raw.substring(colorifyMatcher.start() + 2, colorifyMatcher.end() - 2)));
             colorifyMatcher = colorify.matcher(raw);
         }
 
@@ -197,8 +136,8 @@ public class GuiConfig {
         return raw;
     }
 
-    private static int getColumns(int items) {
-        float columnsNeeded = items / 7f;
+    public static int getColumns(int items) {
+        float columnsNeeded = items / 9f;
         String[] split = (String.valueOf(columnsNeeded)).split("\\.");
         int columns = Integer.parseInt(split[0]);
         if (Long.parseLong(split[1]) > 0)
@@ -207,7 +146,18 @@ public class GuiConfig {
     }
 
     public static Pair<ItemBuilder, Consumer<InventoryClickEvent>> getItem(String key, Player p) {
-        ItemBuilder builder = new ItemBuilder(Material.getMaterial(cfg.getString(key + ".material").toUpperCase()));
+
+        Material material = Material.getMaterial(cfg.getString(key + ".material").toUpperCase());
+        ItemBuilder builder;
+
+        if (cfg.get(key + ".data") != null) {
+            ItemStack is = new ItemStack(material, (byte) cfg.getInt(key + ".data"));
+            builder = new ItemBuilder(is);
+        }
+        else {
+            builder = new ItemBuilder(Material.getMaterial(cfg.getString(key + ".material").toUpperCase()));
+        }
+
         builder.name(getReplaced(key + ".name", p));
         for (String lore : cfg.getStringList(key + ".lore")) {
             builder.addLore(replace(lore, p));

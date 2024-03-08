@@ -1,6 +1,7 @@
 package net.strokkur;
 
-import net.strokkur.config.ColorConfig;
+import net.strokkur.config.ChatColorConfig;
+import net.strokkur.config.NameColorConfig;
 import net.strokkur.config.GuiConfig;
 import net.strokkur.util.MakeList;
 import org.bukkit.Sound;
@@ -15,9 +16,10 @@ public class ColorCMD implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
 
         if (args.length == 1 && args[0].equalsIgnoreCase("reload") && sender.hasPermission("strokkur.reload")) {
-            ColorConfig.reload();
+            NameColorConfig.reload();
+            ChatColorConfig.reload();
             GuiConfig.reload();
-            sender.sendMessage("§bSuccessfully reloaded §3§nColors.yml§b and §3§nGui.yml§b!");
+            sender.sendMessage("§bSuccessfully reloaded §3§nNameColors.yml§b, §3§nChatColors.yml§b and §3§nGui.yml§b!");
             return true;
         }
 

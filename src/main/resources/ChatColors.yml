@@ -1,0 +1,18 @@
+#                                   ######################                                   #
+#                                   #                    #                                   #
+#####################################   AstiaMC Config   #####################################
+#                                   #                    #                                   #
+#                                   ######################                                   #
+
+#
+# Example (and default) color:
+# <!> Do not delete <!>
+#
+
+default:
+  genericName: 'Default'          # The color's identifier
+  permission: 'chatcolor.default' # The color's permissions
+  visible: true                   # Whether the color should be visible to people who don't have the permission
+  item: CHEST                     # The item displayed in the GUI
+  obtained: 'Obtained by default' # The text displayed in the {obtained} placeholder
+  color: '&7'                     # The color to be returned by %ac_color%

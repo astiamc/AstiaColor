@@ -11,6 +11,7 @@ commands:
   color:
     aliases:
       - colour
-      - cc
       - namecolor
+      - chatcolor
+      - cosmetic
     description: Open the color GUI

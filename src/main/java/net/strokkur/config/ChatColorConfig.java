@@ -3,6 +3,7 @@ package net.strokkur.config;
 import net.strokkur.Main;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,13 +11,13 @@ import java.nio.file.Files;
 import java.util.Objects;
 import java.util.Set;
 
-public class ColorConfig {
+public class ChatColorConfig {
     public static Set<String> getAllColors() {
         return cfg.getKeys(false);
     }
 
-    public static NameColor getColor(String color) {
-        return new NameColor(color, Objects.requireNonNull(cfg.getStringList(color + ".colors")));
+    public static String getColor(String color) {
+        return cfg.getString(color + ".color");
     }
 
     public static String getGenericName(String color) {
@@ -31,7 +32,7 @@ public class ColorConfig {
         Material out = Material.getMaterial(cfg.getString(color + ".item").toUpperCase());
 
         if (out == null) {
-            throw new RuntimeException(cfg.getString(color + ".item").toUpperCase() + " is not a valid material. >>> Colors.yml:" + color + ".item");
+            throw new RuntimeException(cfg.getString(color + ".item").toUpperCase() + " is not a valid material. >>> NameColors.yml:" + color + ".item");
         }
 
         return Material.getMaterial(cfg.getString(color + ".item").toUpperCase());
@@ -39,6 +40,10 @@ public class ColorConfig {
 
     public static String getObtained(String color) {
         return Objects.requireNonNull(cfg.getString(color + ".obtained"));
+    }
+
+    public static boolean isVisible(Player p, String color) {
+        return p.hasPermission(cfg.getString(color + ".permission")) || cfg.getBoolean(color + ".visible");
     }
 
 
@@ -59,7 +64,7 @@ public class ColorConfig {
 
 
     public static void init() {
-        file = new File(folder.getPath() + "/Colors.yml");
+        file = new File(folder.getPath() + "/ChatColors.yml");
 
         if (!folder.exists()) {
             folder.mkdir();
@@ -67,7 +72,7 @@ public class ColorConfig {
 
         if (!file.exists()) {
             try {
-                Files.copy(Main.plugin.getResource("Colors.yml"), file.toPath());
+                Files.copy(Main.plugin.getResource("ChatColors.yml"), file.toPath());
             }
             catch (IOException e) {
                 e.printStackTrace();

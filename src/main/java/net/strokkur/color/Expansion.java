@@ -1,7 +1,8 @@
 package net.strokkur.color;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import net.strokkur.config.ColorConfig;
+import net.strokkur.config.ChatColorConfig;
+import net.strokkur.config.NameColorConfig;
 import net.strokkur.util.GetNickname;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -25,20 +26,34 @@ public class Expansion extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player p, @NotNull final String msg) {
 
-        if (msg.equalsIgnoreCase("selectedcolor")) {
-            if (Database.doesNotContain(p.getUniqueId())) return "None";
-            return Database.getColor(p.getUniqueId());
+        if (msg.equalsIgnoreCase("selected_namecolor")) {
+            if (Database.hasNoNameColor(p.getUniqueId())) return "None";
+
+            String color = Database.getNameColor(p.getUniqueId());
+            return NameColorConfig.getGenericName(color);
         }
 
-        if (msg.equalsIgnoreCase("coloredcolor") || msg.equalsIgnoreCase("coloredcolour")) {
-            if (Database.doesNotContain(p.getUniqueId())) return "None";
+        if (msg.equalsIgnoreCase("selected_namecolor_applied")) {
+            if (Database.hasNoNameColor(p.getUniqueId())) return "None";
 
-            String color = Database.getColor(p.getUniqueId());
-            return ColorConfig.getColor(color).colorString(ColorConfig.getGenericName(color)).replaceAll("&", "§");
+            String color = Database.getNameColor(p.getUniqueId());
+            return NameColorConfig.getColor(color).colorString(NameColorConfig.getGenericName(color)).replaceAll("&", "§");
         }
 
         if (msg.equalsIgnoreCase("name")) {
-            return ColorConfig.getColor(Database.getColor(p.getUniqueId())).colorString(GetNickname.get(p)).replaceAll("&", "§");
+            return NameColorConfig.getColor(Database.getNameColor(p.getUniqueId())).colorString(GetNickname.get(p)).replaceAll("&", "§");
+        }
+
+
+        if (msg.equalsIgnoreCase("selected_chatcolor")) {
+            if (Database.hasNoNameColor(p.getUniqueId())) return "None";
+
+            String color = Database.getChatColor(p.getUniqueId());
+            return ChatColorConfig.getGenericName(color);
+        }
+
+        if (msg.equalsIgnoreCase("color")) {
+            return ChatColorConfig.getColor(Database.getChatColor(p.getUniqueId())).replaceAll("&", "§");
         }
 
         return null;
