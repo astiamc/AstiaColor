@@ -29,9 +29,12 @@ public class NameColor {
      */
     public String colorString(String str) {
         StringBuilder out = new StringBuilder();
+        int n = str.length() - 1;
+
         for (int i = str.length() - 1; i >= 0; i--) {
-            String currentColor = colorcodes.get(str.length() - 1 - i % colorcodes.size());
+            String currentColor = colorcodes.get(n % colorcodes.size());
             out.insert(0, currentColor + str.charAt(i));
+            n--;
         }
 
         return out.toString();
@@ -39,8 +42,16 @@ public class NameColor {
 
     public String getColorArray() {
         StringBuilder out = new StringBuilder("&8[");
+        if (colorcodes.size() == 1) {
+            return "§8[" + colorcodes.get(0) + colorcodes.get(0).replaceAll("[§&]", ".._;_..") + "§8]";
+        }
+
         for (int i = 0; i < colorcodes.size(); i++) {
             out.append(colorcodes.get(i)).append(colorcodes.get(i).replaceAll("[§&]", ".._;_.."));
+            if (i == colorcodes.size() - 1) {
+                break;
+            }
+
             if (i < colorcodes.size() - 2) {
                 out.append("&7, ");
             }

@@ -1,5 +1,5 @@
 name: AstiaColor
-version: '${version}'
+version: '1.0-FINAL'
 main: net.strokkur.Main
 prefix: Color
 load: STARTUP

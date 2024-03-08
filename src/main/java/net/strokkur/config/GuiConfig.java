@@ -1,9 +1,10 @@
 package net.strokkur.config;
 
-import javafx.util.Pair;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.strokkur.Main;
 import net.strokkur.color.Database;
+import net.strokkur.util.GetNickname;
+import net.strokkur.util.Pair;
 import net.strokkur.util.fastinv.FastInv;
 import net.strokkur.util.fastinv.ItemBuilder;
 import org.bukkit.ChatColor;
@@ -16,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,7 +38,7 @@ public class GuiConfig {
             FastInv inv = new FastInv(getColumns(colorAmount) * 9, getReplaced(name + ".title", p));
 
             if (cfg.getBoolean(name + ".enable-items")) {
-                for (Object k : cfg.getKeys(true).stream().filter((str) -> str.contains(name + ".items.")).toArray()) {
+                for (Object k : cfg.getKeys(true).stream().filter((str) -> str.contains(name + ".items.") && str.split("\\.").length == 3).toArray()) {
                     String key = (String) k;
 
                     if (cfg.getInt(key + "slot") > 9) {
@@ -89,11 +89,12 @@ public class GuiConfig {
                 slot++;
             }
 
+            return inv;
         }
 
         FastInv inv = new FastInv(cfg.getInt(name + ".slots"), getReplaced(name + ".title", p));
 
-        for (Object k : cfg.getKeys(true).stream().filter((str) -> str.contains(name + ".items.")).toArray()) {
+        for (Object k : cfg.getKeys(true).stream().filter((str) -> str.contains(name + ".items.") && str.split("\\.").length == 3).toArray()) {
             String key = (String) k;
 
             Pair<ItemBuilder, Consumer<InventoryClickEvent>> item = getItem(key, p);
@@ -120,20 +121,23 @@ public class GuiConfig {
     private static YamlConfiguration cfg;
     private static File file;
 
+    private static final File folder = new File("plugins/AstiaColor");
+
 
     public static void init() {
-        file = new File(Main.plugin.getDataFolder() + "\\gui.yml");
+        file = new File(folder.getPath() + "/Gui.yml");
 
-        if (Main.plugin.getDataFolder().exists()) {
-            Main.plugin.getDataFolder().mkdir();
+        if (!folder.exists()) {
+            folder.mkdir();
         }
 
-        try {
-            Files.copy(Objects.requireNonNull(Main.plugin.getResource("gui.yml")),
-                    file.toPath());
-        }
-        catch (IOException e) {
-            e.printStackTrace();
+        if (!file.exists()) {
+            try {
+                Files.copy(Main.plugin.getResource("Gui.yml"), file.toPath());
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         reload();
@@ -154,32 +158,40 @@ public class GuiConfig {
     }
 
     public static String replace(String raw, Player p) {
+        if (raw.contains("%essentials_nickname_stripped%")) {
+            raw = raw.replaceAll("%essentials_nickname_stripped%", GetNickname.get(p));
+        }
+
         if (PlaceholderAPI.containsPlaceholders(raw)) {
             raw = PlaceholderAPI.setPlaceholders(p, raw);
         }
 
-        raw = ChatColor.translateAlternateColorCodes('&', raw);
+        raw = raw.replaceAll("&", "§");
         raw = raw.replaceAll(Pattern.quote(".._;_.."), "&");
 
         return raw;
     }
 
     public static String replace(String raw, Player p, String color) {
-        raw = raw.replaceAll("\\{generic_name}", ColorConfig.getGenericName(color));
-        raw = raw.replaceAll("\\{color_array}", ColorConfig.getColor(color).getColorArray());
-        raw = raw.replaceAll("\\{obtained}", ColorConfig.getObtained(color));
+        if (raw.contains("%essentials_nickname_stripped%")) {
+            raw = raw.replaceAll("%essentials_nickname_stripped%", GetNickname.get(p));
+        }
 
         if (PlaceholderAPI.containsPlaceholders(raw)) {
             raw = PlaceholderAPI.setPlaceholders(p, raw);
         }
 
+        raw = raw.replaceAll("\\{generic_name}", ColorConfig.getGenericName(color));
+        raw = raw.replaceAll("\\{color_array}", ColorConfig.getColor(color).getColorArray());
+        raw = raw.replaceAll("\\{obtained}", ColorConfig.getObtained(color));
+
         Matcher colorifyMatcher = colorify.matcher(raw);
         while (colorifyMatcher.find()) {
-            raw = colorifyMatcher.replaceFirst(raw.substring(colorifyMatcher.start() + 2, colorifyMatcher.regionEnd() - 2));
+            raw = colorifyMatcher.replaceFirst(ColorConfig.getColor(color).colorString(raw.substring(colorifyMatcher.start() + 2, colorifyMatcher.end() - 2)));
             colorifyMatcher = colorify.matcher(raw);
         }
 
-        raw = ChatColor.translateAlternateColorCodes('&', raw);
+        raw = raw.replaceAll("&", "§");
         raw = raw.replaceAll(Pattern.quote(".._;_.."), "&");
 
         return raw;
@@ -197,7 +209,7 @@ public class GuiConfig {
     public static Pair<ItemBuilder, Consumer<InventoryClickEvent>> getItem(String key, Player p) {
         ItemBuilder builder = new ItemBuilder(Material.getMaterial(cfg.getString(key + ".material").toUpperCase()));
         builder.name(getReplaced(key + ".name", p));
-        for (String lore : cfg.getStringList(key + "lore")) {
+        for (String lore : cfg.getStringList(key + ".lore")) {
             builder.addLore(replace(lore, p));
         }
 
@@ -208,13 +220,14 @@ public class GuiConfig {
             String value = cfg.getString(onclick + "value");
             boolean close = cfg.get(onclick + "close") != null && cfg.getBoolean(onclick + "close");
 
-            if (key.equalsIgnoreCase("open_inv")) {
+            if (type.equalsIgnoreCase("open_inv")) {
                 clickEvent = (e) -> {
                     e.setCancelled(true);
+                    p.closeInventory();
                     getInventory(value, p).open(p);
                 };
             }
-            else if (key.equalsIgnoreCase("command")) {
+            else if (type.equalsIgnoreCase("command")) {
                 clickEvent = (e) -> {
                     e.setCancelled(true);
                     boolean executed = p.performCommand(value);
@@ -227,10 +240,10 @@ public class GuiConfig {
                     }
                 };
             }
-            else if (key.equalsIgnoreCase("message")) {
+            else if (type.equalsIgnoreCase("message")) {
                 clickEvent = (e) -> {
                     e.setCancelled(true);
-                    p.sendMessage(value);
+                    p.sendMessage(replace(value, p));
                     if (close) {
                         p.closeInventory();
                     }
