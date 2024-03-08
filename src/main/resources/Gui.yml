@@ -94,7 +94,7 @@ colors-gui:
       - " &5&l* &7Color: ~~{generic_name}~~ {color_array}"
       - " &5&l* &7{obtained}"
       - " "
-      - "&2&l<!> &aYou &nown&a this name color!"
+      - "&2&l<!> &aYou own&a this name color!"
       - "&b&nClick to select this name color!"
   colors-messages:
     locked:
