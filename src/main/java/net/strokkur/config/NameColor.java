@@ -51,11 +51,11 @@ public class NameColor {
     public String getColorArray() {
         StringBuilder out = new StringBuilder("&8[");
         if (colorcodes.size() == 1) {
-            return "§8[" + colorcodes.get(0) + colorcodes.get(0).replaceAll("[§&]", ".._;_..") + "§8]";
+            return "§8[" + colorcodes.get(0).substring(0, 2) + colorcodes.get(0).substring(0, 2).replaceAll("[§&]", ".._;_..") + "§8]";
         }
 
         for (int i = 0; i < colorcodes.size(); i++) {
-            out.append(colorcodes.get(i)).append(colorcodes.get(i).replaceAll("[§&]", ".._;_.."));
+            out.append(colorcodes.get(i), 0, 2).append(colorcodes.get(i).replaceAll("[§&]", ".._;_.."));
             if (i == colorcodes.size() - 1) {
                 break;
             }
@@ -64,7 +64,7 @@ public class NameColor {
                 out.append("&7, ");
             }
             else {
-                out.append("&7 & ");
+                out.append("&7 .._;_.. ");
             }
         }
 

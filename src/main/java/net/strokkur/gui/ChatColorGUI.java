@@ -3,12 +3,19 @@ package net.strokkur.gui;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.strokkur.color.Database;
 import net.strokkur.config.ChatColorConfig;
+import net.strokkur.config.NameColorConfig;
 import net.strokkur.util.Pair;
 import net.strokkur.util.fastinv.FastInv;
 import net.strokkur.util.fastinv.ItemBuilder;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -48,9 +55,18 @@ public class ChatColorGUI {
                 continue;
             }
 
-            ItemBuilder builder = new ItemBuilder(ChatColorConfig.getMaterial(c));
-            builder.name(replace(cfg.getString(name + ".colors-display"), p, c));
+            ItemStack out;
+            if (ChatColorConfig.hasData(c)) {
+                out = new ItemStack(ChatColorConfig.getMaterial(c), 1, ChatColorConfig.getData(c));
+            }
+            else {
+                out = new ItemStack(ChatColorConfig.getMaterial(c), 1);
+            }
 
+            ItemMeta meta = out.getItemMeta();
+            meta.setDisplayName(replace(cfg.getString(name + ".colors-display"), p, c));
+
+            List<String> lore = new ArrayList<>();
             Consumer<InventoryClickEvent> clickEvent = (e) -> {
                 e.setCancelled(true);
 
@@ -62,7 +78,7 @@ public class ChatColorGUI {
             if (p.hasPermission(ChatColorConfig.getPermission(c))) {
                 for (String str : cfg.getStringList(name + ".colors-lore.owned")) {
                     str = replace(str, p, c);
-                    builder.addLore(str);
+                    lore.add(str);
                 }
                 clickEvent = (e) -> {
                     e.setCancelled(true);
@@ -76,11 +92,13 @@ public class ChatColorGUI {
             else {
                 for (String str : cfg.getStringList(name + ".colors-lore.locked")) {
                     str = replace(str, p, c);
-                    builder.addLore(str);
+                    lore.add(str);
                 }
             }
 
-            inv.setItem(slot, builder.build(), clickEvent);
+            meta.setLore(lore);
+            out.setItemMeta(meta);
+            inv.setItem(slot, out, clickEvent);
             slot++;
         }
 

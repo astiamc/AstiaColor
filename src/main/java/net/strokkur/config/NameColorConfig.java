@@ -41,6 +41,13 @@ public class NameColorConfig {
         return Objects.requireNonNull(cfg.getString(color + ".obtained"));
     }
 
+    public static boolean hasData(String color) {
+        return cfg.get(color + ".data") != null;
+    }
+    public static byte getData(String color) {
+        return Byte.parseByte(cfg.getString(color + ".data"));
+    }
+
 
     /*
      * - - - - - - - - - - - - - - - -
