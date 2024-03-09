@@ -1,9 +1,9 @@
-package net.strokkur.color;
+package net.strokkur.color.color;
 
+import net.strokkur.color.config.ChatColorConfig;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import net.strokkur.config.ChatColorConfig;
-import net.strokkur.config.NameColorConfig;
-import net.strokkur.util.GetNickname;
+import net.strokkur.color.config.NameColorConfig;
+import net.strokkur.color.util.GetNickname;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

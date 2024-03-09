@@ -1,4 +1,4 @@
-package net.strokkur.config;
+package net.strokkur.color.config;
 
 import java.util.List;
 

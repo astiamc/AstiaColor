@@ -1,4 +1,4 @@
-package net.strokkur.util;
+package net.strokkur.color.util;
 
 public class Pair<T1, T2> {
 

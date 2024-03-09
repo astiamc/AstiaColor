@@ -1,4 +1,4 @@
-package net.strokkur.color;
+package net.strokkur.color.color;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Nullable;

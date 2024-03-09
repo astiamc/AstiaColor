@@ -1,4 +1,4 @@
-package net.strokkur.util.fastinv;
+package net.strokkur.color.util.fastinv;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;

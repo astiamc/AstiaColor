@@ -1,4 +1,4 @@
-package net.strokkur.util;
+package net.strokkur.color.util;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;

@@ -1,6 +1,6 @@
 name: AstiaColor
 version: '1.0-FINAL'
-main: net.strokkur.Main
+main: net.strokkur.color.Main
 prefix: Color
 load: STARTUP
 depend: [PlaceholderAPI]

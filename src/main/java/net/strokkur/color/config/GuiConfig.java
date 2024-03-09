@@ -1,28 +1,23 @@
-package net.strokkur.config;
+package net.strokkur.color.config;
 
+import net.strokkur.color.Main;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.strokkur.Main;
-import net.strokkur.gui.ChatColorGUI;
-import net.strokkur.gui.NameColorGUI;
-import net.strokkur.util.GetNickname;
-import net.strokkur.util.Pair;
-import net.strokkur.util.fastinv.FastInv;
-import net.strokkur.util.fastinv.ItemBuilder;
+import net.strokkur.color.gui.ChatColorGUI;
+import net.strokkur.color.gui.NameColorGUI;
+import net.strokkur.color.util.GetNickname;
+import net.strokkur.color.util.Pair;
+import net.strokkur.color.util.fastinv.FastInv;
+import net.strokkur.color.util.fastinv.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -1,4 +1,4 @@
-package net.strokkur.util;
+package net.strokkur.color.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;

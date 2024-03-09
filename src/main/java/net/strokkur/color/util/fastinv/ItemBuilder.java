@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.strokkur.util.fastinv;
+package net.strokkur.color.util.fastinv;
 
 import org.bukkit.Color;
 import org.bukkit.Material;

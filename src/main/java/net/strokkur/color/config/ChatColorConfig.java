@@ -1,6 +1,6 @@
-package net.strokkur.config;
+package net.strokkur.color.config;
 
-import net.strokkur.Main;
+import net.strokkur.color.Main;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;

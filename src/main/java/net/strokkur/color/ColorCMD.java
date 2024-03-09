@@ -1,9 +1,9 @@
-package net.strokkur;
+package net.strokkur.color;
 
-import net.strokkur.config.ChatColorConfig;
-import net.strokkur.config.NameColorConfig;
-import net.strokkur.config.GuiConfig;
-import net.strokkur.util.MakeList;
+import net.strokkur.color.config.ChatColorConfig;
+import net.strokkur.color.config.NameColorConfig;
+import net.strokkur.color.config.GuiConfig;
+import net.strokkur.color.util.MakeList;
 import org.bukkit.Sound;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
