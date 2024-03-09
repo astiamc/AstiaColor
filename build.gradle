@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group = 'net'
+group = 'AstiaColor'
 version = ''
 
 repositories {
